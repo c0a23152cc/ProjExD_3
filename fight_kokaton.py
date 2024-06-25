@@ -139,7 +139,7 @@ class Bomb:
         if not tate:
             self.vy *= -1
         self.rct.move_ip(self.vx, self.vy)
-        screen.blit(self.img, self.rct)
+        screen.blit(self.img, self.rct)    
 
 
 def main():
@@ -161,24 +161,25 @@ def main():
                 beam = Beam(bird)            
         screen.blit(bg_img, [0, 0])
         
-        if bomb is not None: 
-            if bird.rct.colliderect(bomb.rct):
-                bomb=None
-                # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-                fonto = pg.font.Font(None, 80)
-                txt = fonto.render("Game Over", True, (255, 0, 0))
-                screen.blit(txt, [WIDTH/2-150, HEIGHT/2])
-                pg.display.update()
-                time.sleep(5)
-                return
-        
-        if bomb is not None:
-            if beam is not None:
-                if beam.rct.colliderect(bomb.rct):
-                    bomb=None
-                    beam=None
-                    bird.change_img(6, screen)
+        for i in range(len(bombs)):
+            if bombs[i] is not None: 
+                if bird.rct.colliderect(bombs[i].rct):
+                    bombs[i]=None
+                    # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
+                    fonto = pg.font.Font(None, 80)
+                    txt = fonto.render("Game Over", True, (255, 0, 0))
+                    screen.blit(txt, [WIDTH/2-150, HEIGHT/2])
                     pg.display.update()
+                    time.sleep(5)
+                    return
+            
+            if bombs[i] is not None:
+                if beam is not None:
+                    if beam.rct.colliderect(bombs[i].rct):
+                        bombs[i]=None
+                        beam=None
+                        bird.change_img(6, screen)
+                        pg.display.update()
         
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
