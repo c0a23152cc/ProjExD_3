@@ -186,7 +186,7 @@ def main():
                     pg.display.update()
                     time.sleep(5)
                     return
-            
+            # 演習2 マルチビーム
             for j,beam in enumerate(beams):
                 if beam is not None:
                     if bombs[i] is not None: 
