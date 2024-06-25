@@ -154,6 +154,24 @@ class Score:
         screen.blit(self.img, self.center)  # スクリーンに表示
 
 
+class Explosion:
+    def __init__(self, bomb) -> None:
+        img1 = pg.transform.rotozoom(pg.image.load("fig/explosion.gif"), 0, 0.9)
+        img2 = pg.transform.flip(img1, True, True)
+        self.img_lst = [img1, img2]
+        self.rct_lst = self.img_lst.get_rect()
+        self.rct_lst.center = bomb.rct.center
+        self.life = 10
+
+    def update(self, screen):
+        self.life -= 1
+        if self.life > 0:
+            if self.life % 2 == 0:
+                screen.blit(self.img_lst[0], self.rct_lst.center)
+            else:
+                screen.blit(self.img_lst[1], self.rct_lst.center)  
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -166,6 +184,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     score = Score()
+    explo = []
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -191,6 +210,7 @@ def main():
                 if beam is not None:
                     if bombs[i] is not None: 
                         if beam.rct.colliderect(bombs[i].rct):
+                            explo.append(Explosion(bombs[i]))
                             bombs[i] = None
                             beams[j] = None
                             score.score += 1  # scoreカウント
